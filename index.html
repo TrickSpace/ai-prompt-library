@@ -1,1 +1,1500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate AI Prompt Library</title>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --primary-dark: #4338CA;
+            --secondary: #10B981;
+            --dark: #1F2937;
+            --light: #F9FAFB;
+            --gray: #6B7280;
+            --gray-light: #E5E7EB;
+            --danger: #EF4444;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background-color: white;
+            border-right: 1px solid var(--gray-light);
+            padding: 1.5rem;
+            overflow-y: auto;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+        
+        .logo {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .search-box {
+            background-color: var(--light);
+            border: 1px solid var(--gray-light);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .search-box input {
+            border: none;
+            outline: none;
+            background: transparent;
+            width: 100%;
+            font-size: 0.875rem;
+        }
+        
+        .search-box svg {
+            color: var(--gray);
+            width: 18px;
+            height: 18px;
+            margin-right: 0.5rem;
+        }
+        
+        .category-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--gray);
+            margin-top: 1.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .nav-links {
+            list-style: none;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+            color: var(--dark);
+            transition: all 0.2s;
+            margin-bottom: 0.25rem;
+        }
+        
+        .nav-link:hover {
+            background-color: var(--gray-light);
+        }
+        
+        .nav-link.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .nav-link svg {
+            width: 18px;
+            height: 18px;
+            margin-right: 0.75rem;
+        }
+        
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        
+        .header h1 {
+            font-size: 1.875rem;
+            font-weight: 700;
+        }
+        
+        .prompt-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .prompt-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+        }
+        
+        .prompt-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .prompt-header {
+            padding: 1.25rem;
+            border-bottom: 1px solid var(--gray-light);
+        }
+        
+        .prompt-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .prompt-title svg {
+            width: 20px;
+            height: 20px;
+            color: var(--primary);
+        }
+        
+        .prompt-description {
+            font-size: 0.875rem;
+            color: var(--gray);
+        }
+        
+        .prompt-tags {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 0.75rem;
+            gap: 0.5rem;
+        }
+        
+        .prompt-tag {
+            background-color: var(--gray-light);
+            color: var(--gray);
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+        }
+        
+        .prompt-footer {
+            padding: 1rem 1.25rem;
+            background-color: var(--light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .difficulty {
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .difficulty.beginner {
+            color: var(--secondary);
+        }
+        
+        .difficulty.intermediate {
+            color: #FBBF24;
+        }
+        
+        .difficulty.advanced {
+            color: var(--danger);
+        }
+        
+        .view-button {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        
+        .view-button svg {
+            width: 16px;
+            height: 16px;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 0.75rem;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--gray-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+        }
+        
+        .close-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--gray);
+        }
+        
+        .close-button svg {
+            width: 24px;
+            height: 24px;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .prompt-details h2 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        .prompt-details p {
+            margin-bottom: 1rem;
+        }
+        
+        .prompt-code {
+            background-color: var(--dark);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.875rem;
+            line-height: 1.8;
+            white-space: pre-wrap;
+        }
+        
+        .copy-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.25rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .copy-button:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .copy-button svg {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid var(--gray-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .tip {
+            font-size: 0.875rem;
+            color: var(--gray);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .tip svg {
+            width: 18px;
+            height: 18px;
+            color: #FBBF24;
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                border-right: none;
+                border-bottom: 1px solid var(--gray-light);
+            }
+            
+            .prompt-container {
+                grid-template-columns: 1fr;
+            }
+        }
 
+        .section-content {
+            display: none;
+        }
+
+        .section-content.active {
+            display: block;
+        }
+
+        .subsection-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin: 1.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--gray-light);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                AI Prompt Library
+            </div>
+            
+            <div class="search-box">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <input type="text" placeholder="Search prompts...">
+            </div>
+            
+            <div class="category-title">Categories</div>
+            <ul class="nav-links">
+                <li class="nav-link active" data-section="content-creation">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                    Content Creation
+                </li>
+                <li class="nav-link" data-section="marketing-strategy">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                    Marketing Strategy
+                </li>
+                <li class="nav-link" data-section="visual-content">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                    Visual Content
+                </li>
+                <li class="nav-link" data-section="growth-hacking">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                    Growth Hacking
+                </li>
+                <li class="nav-link" data-section="business-strategy">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"></path><path d="M22 12A10 10 0 0 0 12 2v10z"></path></svg>
+                    Business Strategy
+                </li>
+            </ul>
+            
+            <div class="category-title">Resources</div>
+            <ul class="nav-links">
+                <li class="nav-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+                    AI Tools List
+                </li>
+                <li class="nav-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                    Usage Guide
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Content Creation Section -->
+            <div id="content-creation" class="section-content active">
+                <div class="header">
+                    <h1>📱 Content Creation</h1>
+                </div>
+                
+                <div class="subsection-title">⭐ Headlines & Captions</div>
+                <div class="prompt-container">
+                    <div class="prompt-card" onclick="openModal('engagement-headlines')">
+                        <div class="prompt-header">
+                            <div class="prompt-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                Engagement-Driving Headlines
+                            </div>
+                            <div class="prompt-description">Generate 15 compelling headlines with built-in CTR ratings</div>
+                            <div class="prompt-tags">
+                                <span class="prompt-tag">Headlines</span>
+                                <span class="prompt-tag">Content</span>
+                            </div>
+                        </div>
+                        <div class="prompt-footer">
+                            <div class="difficulty beginner">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                Beginner
+                            </div>
+                            <div class="view-button">
+                                View Prompt
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="prompt-card" onclick="openModal('instagram-captions')">
+                        <div class="prompt-header">
+                            <div class="prompt-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                Instagram Captions
+                            </div>
+                            <div class="prompt-description">Create 5 sales-driving Instagram captions with perfect structure</div>
+                            <div class="prompt-tags">
+                                <span class="prompt-tag">Instagram</span>
+                                <span class="prompt-tag">Social Media</span>
+                            </div>
+                        </div>
+                        <div class="prompt-footer">
+                            <div class="difficulty beginner">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                Beginner
+                            </div>
+                            <div class="view-button">
+                                View Prompt
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="prompt-card" onclick="openModal('twitter-threads')">
+                        <div class="prompt-header">
+                            <div class="prompt-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                                Viral Twitter/X Threads
+                            </div>
+                            <div class="prompt-description">Create outlines for viral Twitter/X threads with hooks and CTAs</div>
+                            <div class="prompt-tags">
+                                <span class="prompt-tag">Twitter</span>
+                                <span class="prompt-tag">Threads</span>
+                            </div>
+                        </div>
+                        <div class="prompt-footer">
+                            <div class="difficulty intermediate">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                Intermediate
+                            </div>
+                            <div class="view-button">
+                                View Prompt
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="subsection-title">📊 Content Strategy</div>
+                <div class="prompt-container">
+                    <div class="prompt-card" onclick="openModal('content-pillars')">
+                        <div class="prompt-header">
+                            <div class="prompt-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                                Content Pillar Generator
+                            </div>
+                            <div class="prompt-description">Generate 5 content pillars with topics and ideal formats</div>
+                            <div class="prompt-tags">
+                                <span class="prompt-tag">Strategy</span>
+                                <span class="prompt-tag">Planning</span>
+                            </div>
+                        </div>
+                        <div class="prompt-footer">
+                            <div class="difficulty intermediate">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                Intermediate
+                            </div>
+                            <div class="view-button">
+                                View Prompt
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="prompt-card" onclick="openModal('content-calendar')">
+                        <div class="prompt-header">
+                            <div class="prompt-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                Monthly Content Calendar
+                            </div>
+                            <div class="prompt-description">Create a 30-day content calendar with daily ideas and formats</div>
+                            <div class="prompt-tags">
+                                <span class="prompt-tag">Calendar</span>
+                                <span class="prompt-tag">Planning</span>
+                            </div>
+                        </div>
+                        <div class="prompt-footer">
+                            <div class="difficulty intermediate">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                Intermediate
+                            </div>
+                            <div class="view-button">
+                                View Prompt
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="subsection-title">📝 Copywriting & Conversion</div>
+                <div class="prompt-container">
+                    <div class="prompt-card" onclick="openModal('aida-framework')">
+                        <div class="prompt-header">
+                            <div class="prompt-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                AIDA Framework for Sales Copy
+                            </div>
+                            <div class="prompt-description">Create sales copy using the AIDA framework with two approaches</div>
+                            <div class="prompt-tags">
+                                <span class="prompt-tag">Copywriting</span>
+                                <span class="prompt-tag">Sales</span>
+                            </div>
+                        </div>
+                        <div class="prompt-footer">
+                            <div class="difficulty intermediate">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                Intermediate
+                            </div>
+                            <div class="view-button">
+                                View Prompt
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="prompt-card" onclick="openModal('landing-page')">
+                        <div class="prompt-header">
+                            <div class="prompt-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                                Landing Page Copywriting
+                            </div>
+                            <div class="prompt-description">Complete landing page copy with all essential sections</div>
+                            <div class="prompt-tags">
+                                <span class="prompt-tag">Landing Page</span>
+                                <span class="prompt-tag">Conversion</span>
+                            </div>
+                        </div>
+                        <div class="prompt-footer">
+                            <div class="difficulty advanced">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                Advanced
+                            </div>
+                            <div class="view-button">
+                                View Prompt
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="prompt-card" onclick="openModal('email-sequence')">
+                        <div class="prompt-header">
+                            <div class="prompt-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                                Lead Nurturing Email Sequence
+                            </div>
+                            <div class="prompt-description">5-email sequence for nurturing new leads with optimal timing</div>
+                            <div class="prompt-tags">
+                                <span class="prompt-tag">Email</span>
+                                <span class="prompt-tag">Nurturing</span>
+                            </div>
+                        </div>
+                        <div class="prompt-footer">
+                            <div class="difficulty advanced">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                Advanced
+                            </div>
+                            <div class="view-button">
+                                View Prompt
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Marketing Strategy Section -->
+            <div id="marketing-strategy" class="section-content">
+                <div class="header">
+                    <h1>📊 Marketing Strategy</h1>
+                </div>
+                
+                <div class="subsection-title">🎯 Campaign Planning</div>
+                <div class="prompt-container">
+                    <div class="prompt-card" onclick="openModal('launch-campaign')">
+                        <div class="prompt-header">
+                            <div class="prompt-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                                Launch Campaign Blueprint
+                            </div>
+                            <div class="prompt-description">Complete blueprint for product/service launch campaigns</div>
+                            <div class="prompt-tags">
+                                <span class="prompt-tag">Launch</span>
+                                <span class="prompt-tag">Campaign</span>
+                            </div>
+                        </div>
+                        <div class="prompt-footer">
+                            <div class="difficulty advanced">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                Advanced
+                            </div>
+                            <div class="view-button">
+                                View Prompt
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="prompt-card" onclick="openModal('facebook-ads')">
+                        <div class="prompt-header">
+                            <div class="prompt-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+                                Facebook/Instagram Ads Strategy
+                            </div>
+                            <div class="prompt-description">Complete ad strategy with targeting, creative, and optimization</div>
+                            <div class="prompt-tags">
+                                <span class="prompt-tag">Facebook</span>
+                                <span class="prompt-tag">Ads</span>
+                            </div>
+                        </div>
+                        <div class="prompt-footer">
+                            <div class="difficulty advanced">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                Advanced
+                            </div>
+                            <div class="view-button">
+                                View Prompt
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="subsection-title">📈 Data Analysis</div>
+                <div class="prompt-container">
+                    <div class="prompt-card" onclick="openModal('competitor-analysis')">
+                        <div class="prompt-header">
+                            <div class="prompt-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                                Digital Competitor Analysis
+                            </div>
+                            <div class="prompt-description">Comprehensive competitor analysis with gap identification</div>
+                            <div class="prompt-tags">
+                                <span class="prompt-tag">Competitor</span>
+                                <span class="prompt-tag">Analysis</span>
+                            </div>
+                        </div>
+                        <div class="prompt-footer">
+                            <div class="difficulty intermediate">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                Intermediate
+                            </div>
+                            <div class="view-button">
+                                View Prompt
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="prompt-card" onclick="openModal('conversion-rate')">
+                        <div class="prompt-header">
+                            <div class="prompt-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline><polyline points="17 6 23 6 23 12"></polyline></svg>
+                                Conversion Rate Optimization
+                            </div>
+                            <div class="prompt-description">Analyze funnel bottlenecks and optimize conversion rates</div>
+                            <div class="prompt-tags">
+                                <span class="prompt-tag">CRO</span>
+                                <span class="prompt-tag">Optimization</span>
+                            </div>
+                        </div>
+                        <div class="prompt-footer">
+                            <div class="difficulty advanced">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                Advanced
+                            </div>
+                            <div class="view-button">
+                                View Prompt
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Visual Content Section -->
+            <div id="visual-content" class="section-content">
+                <div class="header">
+                    <h1>🎨 Visual Content</h1>
+                </div>
+                
+                <div class="subsection-title">🖼️ Visual Content Creation</div>
+                <div class="prompt-container">
+                    <div class="prompt-card" onclick="openModal('carousel-design')">
+                        <div class="prompt-header">
+                            <div class="prompt-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                                Instagram Carousel Design Brief
+                            </div>
+                            <div class="prompt-description">Create detailed design briefs for Instagram carousels</div>
+                            <div class="prompt-tags">
+                                <span class="prompt-tag">Instagram</span>
+                                <span class="prompt-tag">Design</span>
+                            </div>
+                        </div>
+                        <div class="prompt-footer">
+                            <div class="difficulty intermediate">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                Intermediate
+                            </div>
+                            <div class="view-button">
+                                View Prompt
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="prompt-card" onclick="openModal('video-script')">
+                        <div class="prompt-header">
+                            <div class="prompt-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"></polygon><rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect></svg>
+                                Video Script Generator
+                            </div>
+                            <div class="prompt-description">Create short-form video scripts with timestamps and visuals</div>
+                            <div class="prompt-tags">
+                                <span class="prompt-tag">Video</span>
+                                <span class="prompt-tag">Script</span>
+                            </div>
+                        </div>
+                        <div class="prompt-footer">
+                            <div class="difficulty intermediate">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                Intermediate
+                            </div>
+                            <div class="view-button">
+                                View Prompt
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="subsection-title">🤖 AI Visual Prompts</div>
+                <div class="prompt-container">
+                    <div class="prompt-card" onclick="openModal('midjourney-prompts')">
+                        <div class="prompt-header">
+                            <div class="prompt-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                                Midjourney Product Photography
+                            </div>
+                            <div class="prompt-description">Generate detailed Midjourney prompts for product photos</div>
+                            <div class="prompt-tags">
+                                <span class="prompt-tag">Midjourney</span>
+                                <span class="prompt-tag">AI Image</span>
+                            </div>
+                        </div>
+                        <div class="prompt-footer">
+                            <div class="difficulty advanced">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                Advanced
+                            </div>
+                            <div class="view-button">
+                                View Prompt
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="prompt-card" onclick="openModal('dalle-prompts')">
+                        <div class="prompt-header">
+                            <div class="prompt-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                                DALL-E Social Media Visual
+                            </div>
+                            <div class="prompt-description">Create DALL-E prompts for professional social media visuals</div>
+                            <div class="prompt-tags">
+                                <span class="prompt-tag">DALL-E</span>
+                                <span class="prompt-tag">AI Image</span>
+                            </div>
+                        </div>
+                        <div class="prompt-footer">
+                            <div class="difficulty advanced">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                Advanced
+                            </div>
+                            <div class="view-button">
+                                View Prompt
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Growth Hacking Section -->
+            <div id="growth-hacking" class="section-content">
+                <div class="header">
+                    <h1>🚀 Growth Hacking & Automation</h1>
+                </div>
+                
+                <div class="subsection-title">🔄 AI Workflow Automation</div>
+                <div class="prompt-container">
+                    <div class="prompt-card" onclick="openModal('content-repurposing')">
+                        <div class="prompt-header">
+                            <div class="prompt-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                                Content Repurposing Automation
+                            </div>
+                            <div class="prompt-description">Create automated systems for repurposing content across formats</div>
+                            <div class="prompt-tags">
+                                <span class="prompt-tag">Automation</span>
+                                <span class="prompt-tag">Repurposing</span>
+                            </div>
+                        </div>
+                        <div class="prompt-footer">
+                            <div class="difficulty advanced">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                Advanced
+                            </div>
+                            <div class="view-button">
+                                View Prompt
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="prompt-card" onclick="openModal('email-automation')">
+                        <div class="prompt-header">
+                            <div class="prompt-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                                Email Marketing Automation
+                            </div>
+                            <div class="prompt-description">Design complete email automation systems for customer journeys</div>
+                            <div class="prompt-tags">
+                                <span class="prompt-tag">Email</span>
+                                <span class="prompt-tag">Automation</span>
+                            </div>
+                        </div>
+                        <div class="prompt-footer">
+                            <div class="difficulty advanced">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                Advanced
+                            </div>
+                            <div class="view-button">
+                                View Prompt
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Business Strategy Section -->
+            <div id="business-strategy" class="section-content">
+                <div class="header">
+                    <h1>📈 Business Growth & Strategy</h1>
+                </div>
+                
+                <div class="subsection-title">💼 Business Model & Monetization</div>
+                <div class="prompt-container">
+                    <div class="prompt-card" onclick="openModal('revenue-diversification')">
+                        <div class="prompt-header">
+                            <div class="prompt-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                                Revenue Stream Diversification
+                            </div>
+                            <div class="prompt-description">Analyze and create strategies for diversifying revenue streams</div>
+                            <div class="prompt-tags">
+                                <span class="prompt-tag">Revenue</span>
+                                <span class="prompt-tag">Strategy</span>
+                            </div>
+                        </div>
+                        <div class="prompt-footer">
+                            <div class="difficulty advanced">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                                Advanced
+                            </div>
+                            <div class="view-button">
+                                View Prompt
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal" id="promptModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Prompt Title</h3>
+                <button class="close-button" onclick="closeModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="prompt-details">
+                    <h2>Description</h2>
+                    <p id="modalDescription">Prompt description goes here.</p>
+                    
+                    <h2>Prompt</h2>
+                    <pre class="prompt-code" id="modalPrompt">Prompt code goes here.</pre>
+                    
+                    <button class="copy-button" onclick="copyPrompt()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        Copy Prompt
+                    </button>
+                    
+                    <h2>Instructions</h2>
+                    <p id="modalInstructions">Instructions go here.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="tip">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                    <span>Tip: Customize all [bracketed] text with your specific information.</span>
+                </div>
+                <button class="copy-button" onclick="closeModal()">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Navigation functionality
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('.section-content');
+        
+        navLinks.forEach(link => {
+            if (link.hasAttribute('data-section')) {
+                link.addEventListener('click', () => {
+                    const sectionId = link.getAttribute('data-section');
+                    
+                    // Update active link
+                    navLinks.forEach(l => {
+                        if (l.hasAttribute('data-section')) {
+                            l.classList.remove('active');
+                        }
+                    });
+                    link.classList.add('active');
+                    
+                    // Show active section
+                    sections.forEach(section => {
+                        section.classList.remove('active');
+                        if (section.id === sectionId) {
+                            section.classList.add('active');
+                        }
+                    });
+                });
+            }
+        });
+        
+        // Modal functionality
+        const modal = document.getElementById('promptModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDescription = document.getElementById('modalDescription');
+        const modalPrompt = document.getElementById('modalPrompt');
+        const modalInstructions = document.getElementById('modalInstructions');
+        
+        // Prompt data
+        const prompts = {
+            'engagement-headlines': {
+                title: 'Engagement-Driving Headlines',
+                description: 'Generate compelling headlines with built-in ratings for click-through potential.',
+                prompt: `Create 15 compelling headlines for [content type] about [topic] targeted to [audience demographics].
+Ensure these headlines:
+1. Spark curiosity
+2. Create a sense of urgency
+3. Are divided into 3 categories: education-based, problem-solving, and aspirational
+4. Maximum 70 characters each
+5. Contain emotional triggers
+
+Add a 1-10 rating for each headline based on potential click-through rate and briefly explain why each rating was given.`,
+                instructions: 'Replace [content type] with your specific content format (blog post, video, social media post), [topic] with your subject matter, and [audience demographics] with your target audience details. For best results, be specific with your topic and audience.'
+            },
+            'instagram-captions': {
+                title: 'Instagram Captions that Convert',
+                description: 'Create Instagram captions designed to drive engagement and sales.',
+                prompt: `Create 5 sales-driving Instagram captions for [product/service] targeted at [audience demographics]. Captions should:
+1. Be 150-200 words in length
+2. Start with a strong hook (1-2 sentences)
+3. Use storytelling in the middle section
+4. Include a clear CTA at the end
+5. Include 10 relevant hashtags (mix of popular and niche)
+6. Use natural language that doesn't feel like hard-selling
+
+Format each caption with the following template:
+[HOOK]
+[STORY]
+[PAIN POINT & SOLUTION]
+[CTA]
+[HASHTAGS]`,
+                instructions: 'Replace [product/service] with your specific offering and [audience demographics] with detailed information about your target customers. Consider adding specific benefits or features you want highlighted.'
+            },
+            'twitter-threads': {
+                title: 'Viral Twitter/X Threads',
+                description: 'Create outlines for Twitter/X threads designed to go viral.',
+                prompt: `Create an outline for a Twitter/X thread about [topic] with viral potential. The thread should:
+1. Consist of 10-15 tweets
+2. Have a strong hook in the first tweet
+3. Each tweet maximum 280 characters
+4. Provide deep insights & interesting data
+5. Include 2-3 places for visuals/infographics (describe what visuals should be shown)
+6. End with a CTA that encourages retweets and discussion
+7. Use conversational yet authoritative language
+
+Format as Tweet 1/X, 2/X etc. with the best hook in the first tweet.`,
+                instructions: 'Replace [topic] with your specific subject matter. The more niche and interesting your topic, the better. Consider topics that offer surprising insights or challenge common assumptions for maximum viral potential.'
+            },
+            'content-pillars': {
+                title: 'Content Pillar Generator',
+                description: 'Generate comprehensive content pillars to structure your content strategy.',
+                prompt: `Analyze my [business description] which targets [target audience demographics].
+
+Based on this analysis, create:
+1. 5 main content pillars appropriate for this business
+2. 10 content topics for each pillar
+3. Recommended content formats for each topic (video, carousel, static post, story, etc.)
+4. Funnel level for each topic (awareness, consideration, conversion)
+5. Suggested content ratio (education:entertainment:promotion)
+
+Present in a structured table format with priority ranking for implementation.`,
+                instructions: 'Replace [business description] with details about your business, products/services, and unique value proposition. For [target audience demographics], include detailed information about your ideal customers, including demographics, interests, pain points, and goals.'
+            },
+            'content-calendar': {
+                title: 'Monthly Content Calendar',
+                description: 'Create a 30-day content calendar with strategic content ideas.',
+                prompt: `Create a content calendar for [platform] for the next 30 days for a [business type] focusing on [main goal: brand awareness/lead generation/sales].
+
+The calendar should include:
+1. 30 daily content ideas with titles and brief descriptions
+2. Category for each content (educational, entertaining, promotional)
+3. Content format (video, carousel, live, story, etc.)
+4. Optimal posting time
+5. KPI column for what to measure (reach, engagement, clicks, conversion)
+6. Cohesive weekly themes
+7. Suggested hashtag strategy
+
+Please also include 5 content ideas to leverage trending topics or event calendar (such as holidays or important upcoming moments).`,
+                instructions: 'Replace [platform] with your target social media platform (Instagram, TikTok, LinkedIn, etc.), [business type] with your industry, and [main goal] with your primary marketing objective. Consider seasonal trends and upcoming events relevant to your audience.'
+            },
+            'aida-framework': {
+                title: 'AIDA Framework for Sales Copy',
+                description: 'Create compelling sales copy using the proven AIDA framework.',
+                prompt: `Create sales copy using the AIDA framework (Attention, Interest, Desire, Action) for [product/service] targeting [target audience] with main pain point [problem description].
+
+The copy should:
+1. Have an attention-grabbing headline
+2. Use language appropriate for the target audience
+3. Emphasize [2-3 unique selling points]
+4. Incorporate social proof
+5. Have a strong CTA
+6. Be between 300-400 words
+7. Use power words and emotional triggers
+
+Provide 2 copy variations with different approaches:
+Variation A: Focus on pain points and solutions
+Variation B: Focus on aspirations and end results`,
+                instructions: 'Replace [product/service] with your specific offering, [target audience] with your ideal customer description, [problem description] with the main pain point your product solves, and [2-3 unique selling points] with your key differentiators.'
+            },
+            'landing-page': {
+                title: 'Landing Page Copywriting',
+                description: 'Create complete landing page copy with all essential conversion elements.',
+                prompt: `Create copy for a landing page for [product/service] selling [specific offer: ebook/course/consultation/product] priced at [price].
+
+The copy should follow this structure:
+1. HEADLINE & SUBHEADLINE
+2. PROBLEM AGITATION (3 paragraphs)
+3. SOLUTION (product presentation and key features)
+4. BENEFITS BULLETS (minimum 7 benefits formatted as "From X to Y")
+5. TESTIMONIAL PLACEHOLDERS (3 testimonial templates with name format and results achieved)
+6. OFFER (including value proposition and price justification)
+7. GUARANTEE & RISK REVERSAL
+8. FAQ (7 common questions and answers)
+9. FINAL CTA
+
+Ensure the copy uses persuasive language, addresses common objections, and creates a sense of urgency.`,
+                instructions: 'Replace [product/service] with your specific offering, [specific offer] with what you\'re selling, and [price] with your price point. For best results, also include details about your unique selling proposition and key benefits.'
+            },
+            'email-sequence': {
+                title: 'Lead Nurturing Email Sequence',
+                description: 'Create a 5-email sequence designed to nurture leads through your funnel.',
+                prompt: `Create a 5-email sequence for nurturing leads who just signed up for [lead magnet/newsletter] about [topic]. The target audience is [audience description] interested in [interest/pain point].
+
+For each email, create:
+1. Main subject line + 2 alternatives (for A/B testing)
+2. Preview text
+3. Personal opener
+4. Persuasive body (200-300 words)
+5. Clear CTA
+6. Effective P.S.
+
+The sequence should have:
+- Email 1: Welcome & Delivery (send within 1 hour after signup)
+- Email 2: Value & Story (send 2 days later)
+- Email 3: Education & Insight (send 4 days later)
+- Email 4: Testimonial & Social Proof (send 6 days later)
+- Email 5: Soft Pitch & Next Steps (send 8 days later)
+
+Also provide expected success metrics for each email and tips to improve open rates.`,
+                instructions: 'Replace [lead magnet/newsletter] with your specific opt-in, [topic] with the subject matter, [audience description] with details about your target audience, and [interest/pain point] with what motivates them.'
+            },
+            'launch-campaign': {
+                title: 'Launch Campaign Blueprint',
+                description: 'Create a complete launch campaign strategy for a new product or service.',
+                prompt: `Create a launch campaign blueprint for [new product/service] with target market [target market description]. Campaign budget is [budget amount] and timeline is [timeframe].
+
+The blueprint should include:
+1. Campaign objective & measurable KPIs
+2. Customer journey map from awareness to purchase
+3. Channel strategy with budget allocation for each channel
+4. Content plan for each phase (pre-launch, launch, post-launch)
+5. Specific timeline with key milestones
+6. Promotion strategy (discounts/bonuses/limited time offers)
+7. Partnership & influencer strategy (if relevant)
+8. Contingency plan for low performance scenarios
+
+Also provide 3 examples of creative briefs for the main campaign content.`,
+                instructions: 'Replace [new product/service] with details about your offering, [target market description] with information about your ideal customers, [budget amount] with your campaign budget, and [timeframe] with your launch period.'
+            },
+            'facebook-ads': {
+                title: 'Facebook/Instagram Ads Strategy',
+                description: 'Create a comprehensive Facebook/Instagram advertising strategy.',
+                prompt: `Create a complete strategy for a Facebook/Instagram Ads campaign with the objective of [objective: awareness/consideration/conversion] for [product/service].
+
+The strategy should include:
+1. Campaign structure (campaigns, ad sets, ads)
+2. Targeting details (demographic, interest, behavior)
+3. Placement recommendations
+4. Bidding strategy & budget allocation
+5. 3 complete ad concepts with:
+   - Primary text
+   - Headline
+   - Description
+   - CTA recommendation
+   - Creative direction (describe visual/video)
+6. A/B testing plan (what variables should be tested)
+7. Scaling strategy if the campaign performs well
+8. Key metrics to monitor
+
+Also add tips for optimizing the campaign based on the latest Facebook algorithm.`,
+                instructions: 'Replace [objective] with your campaign goal (awareness, consideration, or conversion) and [product/service] with your specific offering. For best results, include details about your target audience and unique selling proposition.'
+            },
+            'competitor-analysis': {
+                title: 'Digital Competitor Analysis',
+                description: 'Conduct a comprehensive digital competitor analysis with actionable insights.',
+                prompt: `Conduct a digital competitor analysis for [my business name] operating in the [industry] industry. Our 3 main competitors are:
+1. [Competitor 1]
+2. [Competitor 2]
+3. [Competitor 3]
+
+In the analysis, include:
+1. SWOT Analysis for each competitor
+2. Content strategy analysis (platforms, content types, frequency, engagement rate)
+3. Keyword strategy & SEO positioning
+4. Paid advertising approach (platforms, messaging, unique offers)
+5. Social media presence & engagement tactics
+6. Unique selling proposition comparison
+7. Customer sentiment analysis (based on reviews and public comments)
+8. Gap analysis and opportunity identification
+
+Provide specific recommendations on how [my business name] can leverage competitor weaknesses and differentiate in the marketplace.`,
+                instructions: 'Replace [my business name] with your company name, [industry] with your business sector, and [Competitor 1/2/3] with the names of your main competitors. For best results, choose competitors that are similar in size or target audience.'
+            },
+            'conversion-rate': {
+                title: 'Conversion Rate Optimization',
+                description: 'Analyze and optimize conversion funnels with data-driven recommendations.',
+                prompt: `Analyze the conversion funnel for our [landing page/website] with the following data:
+- Page views: [number]
+- Bounce rate: [percentage]
+- Average time on page: [time]
+- Click-through rate to CTA: [percentage]
+- Form submissions/Purchase rate: [percentage]
+
+The main issue is [description of bottleneck or conversion problem].
+
+Provide:
+1. Comprehensive diagnosis of potential issues at each funnel stage
+2. 10 specific recommendations to improve conversion rate, including:
+   - Changes to headline & copy
+   - Improvements to form/checkout process
+   - UX/UI improvements
+   - A/B testing ideas with predicted outcomes
+   - Trust elements that should be added
+3. Implementation timeline based on effort vs impact
+4. Expected uplift for each change based on industry benchmarks
+5. Metrics to monitor to measure success
+
+Prioritize recommendations based on potential impact and ease of implementation.`,
+                instructions: 'Replace [landing page/website] with your specific page, fill in the metrics with your actual data, and describe the conversion issue you\'re experiencing. The more specific you are about your current metrics and issues, the more actionable the recommendations will be.'
+            },
+            'carousel-design': {
+                title: 'Instagram Carousel Design Brief',
+                description: 'Create detailed design briefs for Instagram carousels that drive engagement.',
+                prompt: `Create a design brief for an Instagram carousel about [topic] with target audience [audience description].
+
+The design brief should include:
+1. Carousel objective and key message
+2. Compelling carousel title
+3. Content outline for 10 slides with:
+   - Slide 1: Powerful hook
+   - Slides 2-9: Breakdown content point by point with specific copy
+   - Slide 10: CTA and next steps
+4. Style guide with:
+   - Color palette (4-5 colors with hex codes)
+   - Typography suggestions (2 font combinations)
+   - Visual style (minimalist, illustrative, photography, etc.)
+   - Icon & element style recommendations
+5. Copy for Instagram caption (300 words max) with hook, body, and CTA
+6. Important visual recommendations for each slide
+7. Hashtag strategy (10-15 hashtags)
+
+Content structure should follow a logical flow with focus on providing value and maintaining visual interest.`,
+                instructions: 'Replace [topic] with your subject matter and [audience description] with details about your target audience. Consider including specific goals for the carousel, such as increasing brand awareness, educating followers, or promoting a product/service.'
+            },
+            'video-script': {
+                title: 'Video Script Generator (Short-Form)',
+                description: 'Create short-form video scripts optimized for social media platforms.',
+                prompt: `Create a short video script (30-60 seconds) for [platform: TikTok/Reels/YouTube Shorts] about [topic] targeted to [target audience].
+
+Script should include:
+1. Strong hook in first 3 seconds that creates pattern interrupt
+2. Full script with format:
+   [Timestamp] - [Visual/Action] - [Script/Voiceover] - [Text on Screen]
+3. Background music suggestions
+4. B-roll shots needed
+5. Editing transitions recommendations
+6. Recommended caption for posting
+7. Clear CTA at the end of the video
+
+Ensure the script follows current [platform] trends and considers audience retention triggers every 5-7 seconds.`,
+                instructions: 'Replace [platform] with your target platform (TikTok, Reels, or YouTube Shorts), [topic] with your subject matter, and [target audience] with your audience demographics. For best results, research current trends on your target platform before using this prompt.'
+            },
+            'midjourney-prompts': {
+                title: 'Midjourney Product Photography',
+                description: 'Generate detailed Midjourney prompts for professional product photography.',
+                prompt: `I want to create professional product photography for [product] using Midjourney.
+
+Create 5 detailed Midjourney prompts to generate product photos with different styles:
+1. Minimalist studio setting
+2. Lifestyle/contextual usage
+3. Flat lay arrangement
+4. Close-up detail shot
+5. Creative conceptual shot
+
+For each prompt, include:
+- Complete prompt with all parameters
+- Specific style references
+- Details about lighting, angle, and composition
+- Additional parameters (--ar, --q, --s, --v, etc.)
+- Negative prompts to avoid unwanted results
+
+Make each prompt very specific and detailed to get photorealistic and commercial-grade results.`,
+                instructions: 'Replace [product] with your specific product. Include as many details as possible about the product, including color, material, shape, size, and any distinctive features. The more specific you are, the better the Midjourney results will be.'
+            },
+            'dalle-prompts': {
+                title: 'DALL-E Social Media Visual',
+                description: 'Create DALL-E prompts for professional social media visuals.',
+                prompt: `Create 5 highly detailed DALL-E 3 prompts to generate high-quality social media visuals for [brand/product] with a [fun/professional/luxury/creative/etc] tone.
+
+Prompts should be for the following visuals:
+1. Website hero image
+2. Instagram post
+3. Facebook cover
+4. LinkedIn featured image
+5. Twitter/X header
+
+For each prompt:
+- Create an extremely detailed full prompt (250+ characters)
+- Explain art style, composition, color scheme
+- Add unique creative direction
+- Include the correct aspect ratio
+- Provide technical specifications to optimize quality
+- Add elements that make the visual cohesive with brand identity
+
+Ensure prompts generate visuals that look professional, not like generic AI results, and comply with platform guidelines.`,
+                instructions: 'Replace [brand/product] with your specific brand or product and [tone] with your desired visual tone. Also consider including your brand colors, existing visual elements, and target audience to ensure the DALL-E prompts generate visuals that align with your brand identity.'
+            },
+            'content-repurposing': {
+                title: 'Content Repurposing Automation',
+                description: 'Create automated systems for repurposing content across multiple formats.',
+                prompt: `I want to create an automated system for repurposing [blog/podcast/video] content into multiple formats. My goal is to generate 10+ content pieces from one source material.
+
+Create a detailed workflow with:
+1. Step-by-step process from content extraction to publishing
+2. Recommended AI tools for each stage with usage instructions
+3. Template prompts for each conversion (e.g., blog to social posts, video to newsletter)
+4. Quality control checkpoints
+5. Scheduling and distribution framework
+6. Tracking metrics for each format
+7. Time estimation for full workflow
+
+Specifically, I want to focus on automating content conversion to these formats:
+- Social media carousel
+- Newsletter segments
+- Short-form video scripts
+- Audiograms & quotes
+- Infographic briefs`,
+                instructions: 'Replace [blog/podcast/video] with your primary content format. For best results, include details about your existing content creation process, your team size, and which platforms you want to repurpose content for.'
+            },
+            'email-automation': {
+                title: 'Email Marketing Automation',
+                description: 'Design complete email automation systems for customer journeys.',
+                prompt: `Create an email marketing automation system for [business type] selling [product/service] with the following customer journey:
+1. Lead magnet download
+2. Welcome sequence
+3. Nurturing sequence
+4. Sales sequence
+5. Onboarding sequence
+6. Retention & upsell sequence
+
+For each sequence, provide:
+1. Trigger conditions and timing
+2. Number of emails and spacing
+3. Subject line formula with examples
+4. Template email structure with section breakdown
+5. Crucial personalization points
+6. Segmentation criteria
+7. A/B testing elements
+8. Re-engagement strategy for non-responders
+
+Also add a workflow diagram showing the full automation flow with decision points and branching logic based on user behavior.`,
+                instructions: 'Replace [business type] with your industry and [product/service] with your specific offering. For more tailored results, include details about your target audience, your sales cycle length, and any existing email sequences you\'re already using.'
+            },
+            'revenue-diversification': {
+                title: 'Revenue Stream Diversification',
+                description: 'Analyze and create strategies for diversifying revenue streams.',
+                prompt: `Analyze the business model of my [business type] that currently generates revenue from [main revenue source] and create a revenue stream diversification strategy.
+
+The analysis should include:
+1. CURRENT MODEL ASSESSMENT:
+   - Strengths & vulnerabilities
+   - Current Customer Lifetime Value
+   - Revenue predictability
+   - Scalability limitations
+
+2. MARKET OPPORTUNITY ANALYSIS:
+   - Adjacent market segments
+   - Underserved customer needs
+   - Trend alignment opportunities
+
+3. DIVERSIFICATION RECOMMENDATIONS:
+   - 5-7 viable new revenue streams with:
+     * Detailed description
+     * Target customer segment
+     * Pricing model options
+     * Implementation complexity
+     * Resource requirements
+     * Revenue potential (low/mid/high range)
+     * Timeframe to profitability
+
+4. PRIORITIZATION FRAMEWORK:
+   - Impact vs effort matrix
+   - Sequencing recommendations
+   - Dependencies
+
+5. IMPLEMENTATION ROADMAP:
+   - 30-60-90 day plan
+   - Key milestones
+   - Resource allocation
+   - Success metrics
+
+6. RISK ASSESSMENT:
+   - Potential cannibalization issues
+   - Brand alignment concerns
+   - Operational challenges
+   - Mitigation strategies
+
+Provide examples of success stories from similar businesses that successfully diversified their revenue streams.`,
+                instructions: 'Replace [business type] with your industry or business model and [main revenue source] with your current primary revenue stream. For best results, include details about your current business size, resources, competitive advantages, and business goals.'
+            }
+        };
+        
+        function openModal(promptId) {
+            const promptData = prompts[promptId];
+            if (promptData) {
+                modalTitle.textContent = promptData.title;
+                modalDescription.textContent = promptData.description;
+                modalPrompt.textContent = promptData.prompt;
+                modalInstructions.textContent = promptData.instructions;
+                
+                modal.style.display = 'flex';
+            }
+        }
+        
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+        
+        function copyPrompt() {
+            const promptText = modalPrompt.textContent;
+            navigator.clipboard.writeText(promptText)
+                .then(() => {
+                    const copyButton = document.querySelector('.copy-button');
+                    copyButton.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                        Copied!
+                    `;
+                    setTimeout(() => {
+                        copyButton.innerHTML = `
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                            Copy Prompt
+                        `;
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error('Could not copy text: ', err);
+                });
+        }
+        
+        // Close modal when clicking outside of it
